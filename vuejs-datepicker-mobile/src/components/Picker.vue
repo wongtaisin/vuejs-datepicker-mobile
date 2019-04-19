@@ -3,19 +3,22 @@
     <div class="m-picker-mark"></div>
     <div class="m-picker-box">
       <div class="m-picker-header">
-        <span @click="cancel">取消</span>
+        <span @click="cal">取消</span>
         <span @click="sel">确定</span>
       </div>
       <div class="m-picker-content">
-        <div class="m-picker-item-box" v-if="type=='datePicker'">
-          <PickerItem :val.sync="year" :selType="'year'" :change="change" :d="dataList[0]"></PickerItem>
-          <PickerItem :val.sync="month" :selType="'month'" :change="change" :d="dataList[1]"></PickerItem>
-          <PickerItem :val.sync="day" :selType="'day'" :change="change" :d="dataList[2]"></PickerItem>
-          <PickerItem :val.sync="hour" :selType="'hour'" :change="change" :d="dataList[3]"></PickerItem>
-          <PickerItem :val.sync="minute" :selType="'minute'" :change="change" :d="dataList[4]"></PickerItem>
+        <div class="m-picker-item-box" v-if="type=='moment'">
+          <PickerItem :change="change" :d="dateList[0]" :selType="'year'" :val.sync="year"></PickerItem>
+          <PickerItem :change="change" :d="dateList[1]" :selType="'month'" :val.sync="month"></PickerItem>
+          <PickerItem :change="change" :d="dateList[2]" :selType="'day'" :val.sync="day"></PickerItem>
+          <PickerItem :change="change" :d="dateList[3]" :selType="'hour'" :val.sync="hour"></PickerItem>
+          <PickerItem :change="change" :d="dateList[4]" :selType="'minute'" :val.sync="minute"></PickerItem>
         </div>
         <div class="m-picker-item-box" v-else>
-          <PickerItem v-for="(i,k) in dataList" :key="k" :change="change" :d="i"></PickerItem>
+          <!-- <PickerItem :change="change" :d="i" :key="k" v-for="(i,k) in dateList"></PickerItem> -->
+          <PickerItem :change="change" :d="dateList[0]" :selType="'year'" :val.sync="year"></PickerItem>
+          <PickerItem :change="change" :d="dateList[1]" :selType="'month'" :val.sync="month"></PickerItem>
+          <PickerItem :change="change" :d="dateList[2]" :selType="'day'" :val.sync="day"></PickerItem>
         </div>
       </div>
     </div>
@@ -23,15 +26,18 @@
 </template>
 
 <script>
-import '../css/style.scss'
+// import '../css/style.scss'
 import PickerItem from './PickerItem.vue'
 export default {
   name: 'datePicker',
+  components: {
+    PickerItem
+  },
   data () {
     return {
       show: false,
       type: 'picker',
-      dataList: [],
+      dateList: [],
       year: 1,
       month: 1,
       day: 1,
@@ -39,10 +45,10 @@ export default {
       minute: 1,
       endTime: '',
       startTime: '',
-      onSucceed (e) {
+      succeed (e) {
         console.log(e)
       },
-      onCancel () {
+      cancel () {
 
       }
     }
@@ -66,6 +72,9 @@ export default {
       }
     }
   },
+  mounted () {
+    this.setMonth()
+  },
   methods: {
     sel () {
       this.show = false;
@@ -73,10 +82,8 @@ export default {
       if (this.day < 10) this.day = `0${this.day}`
       if (this.hour < 10) this.hour = `0${this.hour}`
       if (this.minute < 10) this.minute = `0${this.minute}`
-      this.onSucceed(this.year + '-' + this.month + '-' + this.day + ' ' + this.hour + ':' + this.minute)
-    },
-    itemSel () {
-
+      if (this.type == 'moment') return this.succeed(this.year + '-' + this.month + '-' + this.day + ' ' + this.hour + ':' + this.minute)
+      this.succeed(this.year + '-' + this.month + '-' + this.day)
     },
     setMonth () {
       let c2 = this.month == 2;
@@ -123,35 +130,29 @@ export default {
       for (let i = m2[0]; i <= m2[1]; i++) {
         mArr.push(i + '月')
       }
-      this.dataList[2] = newM;
-      this.dataList[1] = mArr;
+      this.dateList[2] = newM;
+      this.dateList[1] = mArr;
     },
     // 确定数值的回调
     change (val, key, type = '') {
-      if (type == 'day') {
-        this.day = val.match(/\d*/g)[0];
-      } else if (type == 'year') {
+      if (type == 'year') {
         this.year = val.match(/\d*/g)[0];
         this.setMonth()
       } else if (type == 'month') {
         this.month = val.match(/\d*/g)[0];
         this.setMonth()
+      } else if (type == 'day') {
+        this.day = val.match(/\d*/g)[0];
       } else if (type == 'hour') {
         this.hour = val.match(/\d*/g)[0];
       } else if (type == 'minute') {
         this.minute = val.match(/\d*/g)[0];
       }
     },
-    cancel () {
+    cal () {
       this.show = false;
-      this.onCancel()
+      this.cancel()
     },
-  },
-  mounted () {
-    this.setMonth()
-  },
-  components: {
-    PickerItem
   }
 }
 </script>

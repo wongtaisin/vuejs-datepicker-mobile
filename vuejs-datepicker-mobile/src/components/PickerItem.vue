@@ -1,9 +1,9 @@
 <template>
   <div class="m-picker-item">
     <div class="m-scroller-indicator"></div>
-    <div class="m-scroller-mask" @touchstart="start" @touchend="end" @touchmove="move"></div>
-    <div class="m-scroller-item-box" :style="domStyle">
-      <div v-for="(i,k) in d" :key="k" class="m-scroller-item">{{i}}</div>
+    <div @touchend="end" @touchmove="move" @touchstart="start" class="m-scroller-mask"></div>
+    <div :style="domStyle" class="m-scroller-item-box">
+      <div :key="k" class="m-scroller-item" v-for="(i,k) in d">{{i}}</div>
     </div>
   </div>
 </template>
@@ -11,6 +11,22 @@
 <script>
 import { add, sub, mul, div, rem } from '../modules/util'
 export default {
+  props: {
+    change: {
+
+    },
+    val: {
+
+    },
+    selType: {
+
+    },
+    d: {
+      default: function () {
+        return []
+      }
+    }
+  },
   data () {
     return {
       startY: '', // touch start Y
@@ -30,6 +46,24 @@ export default {
     // 选项长度
     itemLen () {
       return this.d.length
+    }
+  },
+  watch: {
+    d () {
+      if (this.itemKey + 1 > this.d.length) {
+        this.itemKey = this.d.length;
+        this.dY = mul((4 - this.itemKey), this.itemHeight);
+        this.scroll(this.dY, 0.4)
+      }
+      if (this.selType == "month" || this.selType == "day" || this.selType == "hour" || this.selType == "minute") {
+        this.d.map((v, k) => {
+          if (v.match(/\d*/g)[0] == this.val) {
+            this.itemKey = k
+          }
+        })
+        this.dY = mul((4 - this.itemKey), this.itemHeight);
+        this.scroll(this.dY, 0.4)
+      }
     }
   },
   mounted () {
@@ -85,7 +119,7 @@ export default {
     },
     move (e) {
       e.preventDefault();
-      let dY = e.touches[0].pageY - this.startY;    //差值
+      let dY = e.touches[0].pageY - this.startY; // 差值
       // 反映差值
       this.domStyle = {
         transform: 'translate3d(0px, ' + (dY + this.dY) + 'px, 0px)',
@@ -118,40 +152,6 @@ export default {
       }
       this.dY = mul((4 - this.itemKey), this.itemHeight);
       this.scroll(this.dY, 0)
-    }
-  },
-  watch: {
-    d () {
-      if (this.itemKey + 1 > this.d.length) {
-        this.itemKey = this.d.length;
-        this.dY = mul((4 - this.itemKey), this.itemHeight);
-        this.scroll(this.dY, 0.4)
-      }
-      if (this.selType == "month" || this.selType == "day" || this.selType == "hour" || this.selType == "minute") {
-        this.d.map((v, k) => {
-          if (v.match(/\d*/g)[0] == this.val) {
-            this.itemKey = k
-          }
-        })
-        this.dY = mul((4 - this.itemKey), this.itemHeight);
-        this.scroll(this.dY, 0.4)
-      }
-    }
-  },
-  props: {
-    change: {
-
-    },
-    val: {
-
-    },
-    selType: {
-
-    },
-    d: {
-      default: function () {
-        return []
-      }
     }
   }
 }

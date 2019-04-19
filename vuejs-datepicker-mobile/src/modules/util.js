@@ -74,6 +74,7 @@ function rem(a, b) {
 }
 
 function getDate(date) {
+  if (date == undefined) return false
   const arr = date.toString().split('-');
   arr[1] = arr[1].length === 1 && arr[1] < 10 ? '0' + arr[1] : arr[1];
   arr[2] = arr[2].length === 1 && arr[2] < 10 ? '0' + arr[2] : arr[2];
