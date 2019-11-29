@@ -1,6 +1,6 @@
 {
   "name": "vuejs-datepicker-mobile",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "A Vue.js datepick mobile project",
   "author": "wongtaisin <wongtaisin1024@gmail.com>",
   "main": "./lib/vuejs-datepicker-mobile.umd.min.js",

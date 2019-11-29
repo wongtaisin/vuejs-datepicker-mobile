@@ -87,7 +87,7 @@ export default {
 >https://github.com/wongtaisin/vuejs-datepicker-mobile
 
 ```
-1.1.0 - 增加背景关闭，优化代码。（此版本不会维持太久，下一版本跟进VueCli4.X）
+1.1.2 - 增加背景关闭，优化代码。（此版本不会维持太久，下一版本跟进VueCli4.X）
 1.0.4 - 增加时分参数
 1.0.0 - 初版本
 ```

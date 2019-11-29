@@ -9,6 +9,7 @@ module.exports = {
   ],
   rules: {
     'no-unneeded-ternary': process.env.NODE_ENV === 'production' ? 'error' : 'off', // 禁止可以在有更简单的可替代的表达式时使用三元操作符
+    'prefer-const': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-sequences': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-return-assign': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'space-before-function-paren': process.env.NODE_ENV === 'production' ? 'error' : 'off',
