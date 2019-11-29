@@ -56,6 +56,7 @@ export default {
   },
   watch: {
     d (fut) {
+      console.log(fut, this.itemKey, this.selType, this.val)
       // if (this.itemKey + 1 > fut.length) this.itemKey = fut.length
       // if (this.selType === 'month' || this.selType === 'day' || this.selType === 'hour' || this.selType === 'minute') {
       fut.map((v, k) => {
@@ -125,7 +126,6 @@ export default {
       let dY = e.touches[0].pageY - this.startY // 差值
       // 反映差值
       this.domStyle = {
-        // transform: `translate3d(0px, ${this.dY}px, 0px)`
         transform: `translate3d(0px, ${dY}px, 0px)`
       }
     },
