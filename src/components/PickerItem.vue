@@ -13,7 +13,8 @@ import {
   add,
   sub,
   mul,
-  div, rem
+  div,
+  rem
 } from '../modules/util'
 export default {
   props: {
@@ -55,7 +56,6 @@ export default {
   },
   watch: {
     d (fut) {
-      console.log(fut, this.itemKey)
       // if (this.itemKey + 1 > fut.length) this.itemKey = fut.length
       // if (this.selType === 'month' || this.selType === 'day' || this.selType === 'hour' || this.selType === 'minute') {
       fut.map((v, k) => {
@@ -64,8 +64,9 @@ export default {
         }
       })
       // }
-      this.dY = mul((4 - this.itemKey), this.itemHeight)
-      this.scroll(this.dY, 0.4)
+      // 动画效果
+      // this.dY = mul((4 - this.itemKey), this.itemHeight)
+      // this.scroll(this.dY, 0.4)
     }
   },
   mounted () {

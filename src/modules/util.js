@@ -79,6 +79,8 @@ function getDate(date) {
   const arr = date.toString().split('-')
   arr[1] = arr[1].length === 1 && arr[1] < 10 ? '0' + arr[1] : arr[1]
   arr[2] = arr[2].length === 1 && arr[2] < 10 ? '0' + arr[2] : arr[2]
+  // arr[3] = arr[3].length === 1 && arr[3] < 10 ? '0' + arr[3] : arr[3]
+  // arr[4] = arr[4].length === 1 && arr[4] < 10 ? '0' + arr[4] : arr[4]
   return `${arr[0]}-${arr[1]}-${arr[2]}`
 }
 
