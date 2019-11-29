@@ -56,18 +56,11 @@ export default {
   },
   watch: {
     d (fut) {
-      console.log(fut, this.itemKey, this.selType, this.val)
-      // if (this.itemKey + 1 > fut.length) this.itemKey = fut.length
-      // if (this.selType === 'month' || this.selType === 'day' || this.selType === 'hour' || this.selType === 'minute') {
       fut.map((v, k) => {
         if (v.match(/\d*/g)[0] === this.val) {
           this.itemKey = k
         }
       })
-      // }
-      // 动画效果
-      // this.dY = mul((4 - this.itemKey), this.itemHeight)
-      // this.scroll(this.dY, 0.4)
     }
   },
   mounted () {
