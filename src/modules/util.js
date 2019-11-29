@@ -14,58 +14,59 @@ const mergeOptions = function ($vm, options) {
 }
 
 function add(a, b) {
-  var c, d, e;
+  var c, d, e
   try {
-    c = a.toString().split(".")[1].length;
+    c = a.toString().split('.')[1].length
   } catch (f) {
-    c = 0;
+    c = 0
   }
   try {
-    d = b.toString().split(".")[1].length;
+    d = b.toString().split('.')[1].length
   } catch (f) {
-    d = 0;
+    d = 0
   }
-  return e = Math.pow(10, Math.max(c, d)), (mul(a, e) + mul(b, e)) / e;
+  return e = Math.pow(10, Math.max(c, d)), (mul(a, e) + mul(b, e)) / e
 }
 
 function sub(a, b) {
-  var c, d, e;
+  var c, d, e
   try {
-    c = a.toString().split(".")[1].length;
+    c = a.toString().split('.')[1].length
   } catch (f) {
-    c = 0;
+    c = 0
   }
   try {
-    d = b.toString().split(".")[1].length;
+    d = b.toString().split('.')[1].length
   } catch (f) {
-    d = 0;
+    d = 0
   }
-  return e = Math.pow(10, Math.max(c, d)), (mul(a, e) - mul(b, e)) / e;
+  return e = Math.pow(10, Math.max(c, d)), (mul(a, e) - mul(b, e)) / e
 }
 
 function mul(a, b) {
-  var c = 0,
-    d = a.toString(),
-    e = b.toString();
+  var c = 0
+  var d = a.toString()
+  var e = b.toString()
   try {
-    c += d.split(".")[1].length;
+    c += d.split('.')[1].length
   } catch (f) {}
   try {
-    c += e.split(".")[1].length;
+    c += e.split('.')[1].length
   } catch (f) {}
-  return Number(d.replace(".", "")) * Number(e.replace(".", "")) / Math.pow(10, c);
+  return Number(d.replace('.', '')) * Number(e.replace('.', '')) / Math.pow(10, c)
 }
 
 function div(a, b) {
-  var c, d, e = 0,
-    f = 0;
+  var c, d
+  var e = 0
+  var f = 0
   try {
-    e = a.toString().split(".")[1].length;
+    e = a.toString().split('.')[1].length
   } catch (g) {}
   try {
-    f = b.toString().split(".")[1].length;
+    f = b.toString().split('.')[1].length
   } catch (g) {}
-  return c = Number(a.toString().replace(".", "")), d = Number(b.toString().replace(".", "")), mul(c / d, Math.pow(10, f - e));
+  return c = Number(a.toString().replace('.', '')), d = Number(b.toString().replace('.', '')), mul(c / d, Math.pow(10, f - e))
 }
 
 // 取余
@@ -74,10 +75,10 @@ function rem(a, b) {
 }
 
 function getDate(date) {
-  if (date == undefined) return false
-  const arr = date.toString().split('-');
-  arr[1] = arr[1].length === 1 && arr[1] < 10 ? '0' + arr[1] : arr[1];
-  arr[2] = arr[2].length === 1 && arr[2] < 10 ? '0' + arr[2] : arr[2];
+  if (date === undefined) return false
+  const arr = date.toString().split('-')
+  arr[1] = arr[1].length === 1 && arr[1] < 10 ? '0' + arr[1] : arr[1]
+  arr[2] = arr[2].length === 1 && arr[2] < 10 ? '0' + arr[2] : arr[2]
   return `${arr[0]}-${arr[1]}-${arr[2]}`
 }
 
