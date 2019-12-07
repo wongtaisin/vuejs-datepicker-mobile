@@ -56,11 +56,15 @@ export default {
   },
   watch: {
     d (fut) {
+      // if (this.itemKey + 1 > fut.length) this.itemKey = fut.length
       fut.map((v, k) => {
         if (v.match(/\d*/g)[0] === this.val) {
           this.itemKey = k
         }
       })
+      // 动画效果
+      this.dY = mul((4 - this.itemKey), this.itemHeight)
+      this.scroll(this.dY, 0.4)
     }
   },
   mounted () {

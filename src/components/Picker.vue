@@ -101,6 +101,11 @@ export default {
       let m1 = [1, 12]
       let newD = [] // day
       let m2 = ''
+      let newH = [] // hour
+      let m3 = [0, 23]
+      let newMI = [] // minute
+      let m4 = [0, 59]
+
       if (this.endTimeArr) {
         if (this.year === +this.endTimeArr[0]) {
           m1[1] = +this.endTimeArr[1]
@@ -134,8 +139,17 @@ export default {
       for (let i = m2[0]; i <= m2[1]; i++) {
         newD.push(i + '日')
       }
+      for (let i = m3[0]; i <= m3[1]; i++) {
+        newH.push(i + '时')
+      }
+      for (let i = m4[0]; i <= m4[1]; i++) {
+        newMI.push(i + '分')
+      }
+
       this.dateList[1] = newM
       this.dateList[2] = newD
+      this.dateList[3] = newH
+      this.dateList[4] = newMI
     },
     /** 设置月日 的确切时间
      *  @param { val } - String
