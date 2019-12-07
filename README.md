@@ -87,8 +87,8 @@ export default {
 >https://github.com/wongtaisin/vuejs-datepicker-mobile
 
 ```
-1.2.0 - 增加初次进入的动画效果。
-1.1.2 - 增加背景关闭，优化代码。
+1.2.0 - 增加初次进入的动画效果
+1.1.2 - 增加背景关闭，优化代码
 1.0.4 - 增加时分参数
 1.0.0 - 初版本
 ```
