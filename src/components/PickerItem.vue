@@ -9,31 +9,19 @@
 </template>
 
 <script>
-import {
-  add,
-  sub,
-  mul,
-  div,
-  rem
-} from '../modules/util'
+import { add, sub, mul, div, rem } from '../modules/util'
 export default {
   props: {
-    change: {
-
-    },
-    val: {
-
-    },
-    selType: {
-
-    },
+    change: {},
+    val: {},
+    selType: {},
     d: {
       default: function () {
         return []
       }
     }
   },
-  data () {
+  data() {
     return {
       startY: '', // touch start Y
       endY: '', // touch end Y
@@ -46,16 +34,18 @@ export default {
     }
   },
   computed: {
-    itemHeight () {
-      return (+window.getComputedStyle(document.querySelector('.m-scroller-item')).height.replace('px', '')).toFixed(2)
+    itemHeight() {
+      return (+window
+        .getComputedStyle(document.querySelector('.m-scroller-item'))
+        .height.replace('px', '')).toFixed(2)
     },
     // 选项长度
-    itemLen () {
+    itemLen() {
       return this.d.length
     }
   },
   watch: {
-    d (fut) {
+    d(fut) {
       // if (this.itemKey + 1 > fut.length) this.itemKey = fut.length
       fut.map((v, k) => {
         if (v.match(/\d*/g)[0] === this.val) {
@@ -63,11 +53,11 @@ export default {
         }
       })
       // 动画效果
-      this.dY = mul((4 - this.itemKey), this.itemHeight)
+      this.dY = mul(4 - this.itemKey, this.itemHeight)
       this.scroll(this.dY, 0.4)
     }
   },
-  mounted () {
+  mounted() {
     // 初始化，定位第一个
     if (this.val) {
       this.moveTo(this.val)
@@ -79,7 +69,7 @@ export default {
     }
   },
   methods: {
-    scroll (y, t) {
+    scroll(y, t) {
       // 根据选项高度判断定在哪个位置
       // y = y - y % this.itemHeight + (y % this.itemHeight > this.itemHeight / 2 ? this.itemHeight : 0)
 
@@ -90,7 +80,7 @@ export default {
       if (y > mul(this.itemHeight, 4)) {
         y = mul(this.itemHeight, 4)
       }
-      let sT = mul((5 - this.itemLen), this.itemHeight)
+      let sT = mul(5 - this.itemLen, this.itemHeight)
       if (y < sT) {
         y = sT
       }
@@ -105,20 +95,20 @@ export default {
       // 停止后的回调
       this.change(this.d[this.itemKey], this.itemKey, this.selType)
     },
-    start (e) {
+    start(e) {
       this.startY = e.touches[0].pageY
       this.domStyle = this.style = {
         transform: `translate3d(0px, ${this.dY}px, 0px)`,
         transition: 'none'
       }
     },
-    end (e) {
+    end(e) {
       this.endY = e.changedTouches[0].pageY
       // 非线性衰减
       let t = parseInt(Math.sqrt(Math.abs(this.endY - this.startY))) / 10
       this.scroll(this.dY + this.endY - this.startY, t)
     },
-    move (e) {
+    move(e) {
       e.preventDefault()
       let dY = e.touches[0].pageY - this.startY // 差值
       // 反映差值
@@ -126,7 +116,7 @@ export default {
         transform: `translate3d(0px, ${dY}px, 0px)`
       }
     },
-    moveTo (val) {
+    moveTo(val) {
       if (this.selType === 'year') {
         this.itemKey = 0
         this.d.map((v, k) => {
@@ -142,7 +132,8 @@ export default {
             this.itemKey = k
           }
         })
-      } else { // 日期外的 如果后面需要做成其他类型
+      } else {
+        // 日期外的 如果后面需要做成其他类型
         this.itemKey = 0
         this.d.map((v, k) => {
           if (Number(v.match(/\d*/g)[0]) === val) {
@@ -150,7 +141,7 @@ export default {
           }
         })
       }
-      this.dY = mul((4 - this.itemKey), this.itemHeight)
+      this.dY = mul(4 - this.itemKey, this.itemHeight)
       this.scroll(this.dY, 0)
     }
   }

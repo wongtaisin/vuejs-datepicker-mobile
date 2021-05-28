@@ -39,7 +39,7 @@ export default {
   components: {
     PickerItem
   },
-  data () {
+  data() {
     return {
       show: false,
       type: 'picker',
@@ -51,26 +51,24 @@ export default {
       minute: 1,
       endTime: '',
       startTime: '',
-      succeed (e) {
+      succeed(e) {
         console.log(e)
       },
-      cancel () {
-
-      }
+      cancel() {}
     }
   },
   computed: {
-    isR () {
+    isR() {
       return this.year % 4 === 0 ? true : false
     },
-    startTimeArr () {
+    startTimeArr() {
       if (this.startTime) {
         return this.startTime.split('-')
       } else {
         return []
       }
     },
-    endTimeArr () {
+    endTimeArr() {
       if (this.endTime) {
         return this.endTime.split('-')
       } else {
@@ -78,23 +76,24 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.setMonth()
   },
   methods: {
-    sel () {
+    sel() {
       this.show = false
       if (this.month < 10) this.month = `0${this.month}`
       if (this.day < 10) this.day = `0${this.day}`
       if (this.hour < 10) this.hour = `0${this.hour}`
       if (this.minute < 10) this.minute = `0${this.minute}`
-      if (this.type === 'moment') return this.succeed(`${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}`)
+      if (this.type === 'moment')
+        return this.succeed(`${this.year}-${this.month}-${this.day} ${this.hour}:${this.minute}`)
       this.succeed(`${this.year}-${this.month}-${this.day}`)
     },
     /**
      * 设置月日 的确切时间
      */
-    setMonth () {
+    setMonth() {
       let c2 = this.month === 2
       let c1 = [1, 3, 5, 7, 8, 10, 12].join().indexOf(parseInt(this.month))
       let newM = [] // month
@@ -153,8 +152,8 @@ export default {
     },
     /** 设置月日 的确切时间
      *  @param { val } - String
-    */
-    change (val, key, type = '') {
+     */
+    change(val, key, type = '') {
       if (type === 'year') {
         this.year = val.match(/\d*/g)[0]
         this.setMonth()
@@ -169,7 +168,7 @@ export default {
         this.minute = val.match(/\d*/g)[0]
       }
     },
-    cal () {
+    cal() {
       this.show = false
       this.cancel()
     }
