@@ -3,13 +3,13 @@ node_modules/
 dist/
 src/
 public/
-vue.config.js
-babel.config.js
-postcss.config.js
+vite.config.js
 *.map
 *.html
 
 # local env files
+.history
+.vscode
 .env.local
 .env.*.local
 
