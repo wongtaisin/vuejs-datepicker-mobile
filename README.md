@@ -28,41 +28,57 @@ Vue.use(Datepicker)
 
 ```js
 <script setup>
-  import {ref} from 'vue' import Datepicker from 'vuejs-datepicker-mobile' Vue.use(Datepicker) const
-  date = ref('') const date1 = ref('') const date2 = ref('2019-11-29') const date3 = ref('2019-04-01
-  18:30') // yyyy-MM-dd HH-mm 务必按照格式 const setPicker = () =>{' '}
-  {Datepicker.show({
-    succeed: e => {
+import { ref } from 'vue'
+import Datepicker from 'vuejs-datepicker-mobile'
+Vue.use(Datepicker)
+
+const date = ref('')
+const date1 = ref('')
+const date2 = ref('2019-11-29')
+const date3 = ref('2019-04-01 18:30') // yyyy-MM-dd HH-mm 务必按照格式
+
+const setPicker = () => {
+  Datepicker.show({
+    succeed: (e) => {
       date.value = e
     }
-  })}
-  const setTime = () => {Datepicker.show({
+  })
+}
+
+const setTime = () => {
+  Datepicker.show({
     type: 'moment', // 时分 moment
-    succeed: e => {
+    succeed: (e) => {
       date1.value = e
     }
-  })}
-  const setDefault = () =>{' '}
-  {Datepicker.show({
+  })
+}
+
+const setDefault = () => {
+  Datepicker.show({
     type: 'picker', // 默认picker，可不填
     date: date2.value, // 初始化时间
-    succeed: e => {
+    succeed: (e) => {
       date2.value = e
     }
-  })}
-  const setMoment = () => {Datepicker.show({
+  });
+}
+
+const setMoment = () => {
+  Datepicker.show({
     type: 'moment', // 时分 moment
     date: date3.value, // 初始化时间，精确到时分
     startTime: '2018-01-01', // 开始时间
     endTime: '2020-10-01', // 截至时间
-    succeed: e => {
+    succeed: (e) => {
       date3.value = e
     },
     cancel: () => {
       console.log('cancel')
     }
-  })}
-</script>
+  })
+}
+ </script>
 ```
 
 ## 版本介绍
