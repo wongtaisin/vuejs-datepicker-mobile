@@ -1,8 +1,10 @@
+@use "sass:math";
+
 $screen: 375;
 
 /* px转换为vw */
 @function px2vw($n) {
-  @return #{($n/$screen)*100}vw
+  @return #{math.div($n, $screen) * 100}vw
 }
 
 .m-picker {

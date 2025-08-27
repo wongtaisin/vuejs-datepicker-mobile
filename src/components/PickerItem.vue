@@ -3,156 +3,141 @@
     <div class="m-scroller-indicator"></div>
     <div @touchend="end" @touchmove="move" @touchstart="start" class="m-scroller-mask"></div>
     <div :style="domStyle" class="m-scroller-item-box">
-      <div :key="k" class="m-scroller-item" v-for="(i,k) in d">{{i}}</div>
+      <!-- 使用 v-for 的标准语法，明确 item 为值，index 为索引 -->
+      <div :key="index" class="m-scroller-item" v-for="(item, index) in d" ref="itemRefs">{{ item }}</div>
     </div>
   </div>
 </template>
 
-<script>
-import {
-  add,
-  sub,
-  mul,
-  div,
-  rem
-} from '../modules/util'
-export default {
-  props: {
-    change: {
+<script setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { add, div, mul, rem, sub } from '../modules/util';
 
-    },
-    val: {
+// 定义props
+const props = defineProps({
+  change: { type: Function },
+  val: { type: [String, Number] },
+  selType: { type: String },
+  d: { type: Array, default: () => [] }
+});
 
-    },
-    selType: {
+// 响应式变量
+const startY = ref(0); // 初始化为数字类型
+const endY = ref(0); // 初始化为数字类型
+const dY = ref(0);
+const itemKey = ref(0);
+const domStyle = ref({ transform: 'translate3d(0, 0, 0)' });
+const itemRefs = ref([]);
 
-    },
-    d: {
-      default: function () {
-        return []
-      }
+// 计算属性
+const itemHeight = computed(() => {
+  if (itemRefs.value[0]) {
+    return Number(window.getComputedStyle(itemRefs.value[0]).height.replace('px', '')).toFixed(2);
+  }
+  return 44; // 默认高度改为数字类型
+});
+
+const itemLen = computed(() => props.d.length);
+
+// 封装获取匹配索引的方法，提高代码复用性
+const getMatchIndex = (val) => {
+  let index = 0;
+  props.d.forEach((v, k) => {
+    if (Number(v.match(/\d+/)[0]) === Number(val)) {
+      index = k;
+    }
+  });
+  return index;
+};
+
+// 挂载时初始化
+onMounted(() => {
+  if (props.val) {
+    moveTo(props.val);
+  } else {
+    dY.value = mul(itemHeight.value, 4);
+    domStyle.value = { transform: `translate3d(0px, ${dY.value}px, 0px)` };
+  }
+});
+
+// 方法定义 - 将scroll函数移到watch之前
+const scroll = (y, t) => {
+  const height = Number(itemHeight.value);
+  let cTop = rem(y, height) > div(height, 2) ? height : 0;
+  y = add(sub(y, rem(y, height)), cTop);
+
+  const maxY = mul(height, 4);
+  if (y > maxY) y = maxY;
+
+  const minY = mul((5 - itemLen.value), height);
+  if (y < minY) y = minY;
+
+  dY.value = y;
+  itemKey.value = Math.floor(div(sub(mul(height, 4), y), height));
+
+  // 确保itemKey在有效范围内
+  if (itemKey.value < 0) itemKey.value = 0;
+  if (itemKey.value >= itemLen.value) itemKey.value = itemLen.value - 1;
+
+  domStyle.value = {
+    transform: `translate3d(0px, ${y}px, 0px)`,
+    transition: `transform ${t}s cubic-bezier(0.1, 0.85, 0.25, 1)`
+  };
+
+  // 确保props.d[itemKey.value]存在再调用change
+  if (props.d[itemKey.value] !== undefined && props.change) {
+    props.change(props.d[itemKey.value], itemKey.value, props.selType);
+  }
+};
+
+// 监听d变化
+watch(
+  () => props.d,
+  () => {
+    if (props.val) {
+      itemKey.value = getMatchIndex(props.val);
+      dY.value = mul((4 - itemKey.value), itemHeight.value);
+      scroll(dY.value, 0.4);
     }
   },
-  data () {
-    return {
-      startY: '', // touch start Y
-      endY: '', // touch end Y
-      lastPoint: [],
-      value: '',
-      dY: 0,
-      itemKey: 0, // 第几个值
-      changeY: '', // sY - eY
-      domStyle: { transform: 'translate3d(0, 0, 0)' }
-    }
-  },
-  computed: {
-    itemHeight () {
-      return (+window.getComputedStyle(document.querySelector('.m-scroller-item')).height.replace('px', '')).toFixed(2)
-    },
-    // 选项长度
-    itemLen () {
-      return this.d.length
-    }
-  },
-  watch: {
-    d (fut) {
-      // if (this.itemKey + 1 > fut.length) this.itemKey = fut.length
-      fut.map((v, k) => {
-        if (v.match(/\d*/g)[0] === this.val) {
-          this.itemKey = k
-        }
-      })
-      // 动画效果
-      this.dY = mul((4 - this.itemKey), this.itemHeight)
-      this.scroll(this.dY, 0.4)
-    }
-  },
-  mounted () {
-    // 初始化，定位第一个
-    if (this.val) {
-      this.moveTo(this.val)
-    } else {
-      this.dY = mul(this.itemHeight, 4)
-      this.domStyle = this.style = {
-        transform: `translate3d(0px, ${this.dY}px, 0px)`
-      }
-    }
-  },
-  methods: {
-    scroll (y, t) {
-      // 根据选项高度判断定在哪个位置
-      // y = y - y % this.itemHeight + (y % this.itemHeight > this.itemHeight / 2 ? this.itemHeight : 0)
+  { immediate: true }
+);
 
-      let cTop = rem(y, this.itemHeight) > div(this.itemHeight, 2) ? this.itemHeight : 0
-      y = add(sub(y, rem(y, this.itemHeight)), cTop)
+const start = (e) => {
+  startY.value = e.touches[0].pageY;
+  domStyle.value = {
+    transform: `translate3d(0px, ${dY.value}px, 0px)`,
+    transition: 'none'
+  };
+};
 
-      // 最大最小情况的判断
-      if (y > mul(this.itemHeight, 4)) {
-        y = mul(this.itemHeight, 4)
-      }
-      let sT = mul((5 - this.itemLen), this.itemHeight)
-      if (y < sT) {
-        y = sT
-      }
+const end = (e) => {
+  endY.value = e.changedTouches[0].pageY;
+  const t = Math.sqrt(Math.abs(endY.value - startY.value)) / 10; // 去掉 parseInt，保留小数
+  scroll(dY.value + endY.value - startY.value, t);
+};
 
-      this.dY = y // 记录现在的位置
+const move = (e) => {
+  e.preventDefault();
+  const currentDY = e.touches[0].pageY - startY.value;
+  domStyle.value = { transform: `translate3d(0px, ${dY.value + currentDY}px, 0px)` };
+};
 
-      this.itemKey = div(sub(mul(this.itemHeight, 4), y), this.itemHeight) // 第几个值
-      this.domStyle = this.style = {
-        transform: `translate3d(0px, ${y}px, 0px)`,
-        transition: `all ${t}s cubic-bezier(0.1, 0.85, 0.25, 1) 0s`
-      }
-      // 停止后的回调
-      this.change(this.d[this.itemKey], this.itemKey, this.selType)
-    },
-    start (e) {
-      this.startY = e.touches[0].pageY
-      this.domStyle = this.style = {
-        transform: `translate3d(0px, ${this.dY}px, 0px)`,
-        transition: 'none'
-      }
-    },
-    end (e) {
-      this.endY = e.changedTouches[0].pageY
-      // 非线性衰减
-      let t = parseInt(Math.sqrt(Math.abs(this.endY - this.startY))) / 10
-      this.scroll(this.dY + this.endY - this.startY, t)
-    },
-    move (e) {
-      e.preventDefault()
-      let dY = e.touches[0].pageY - this.startY // 差值
-      // 反映差值
-      this.domStyle = {
-        transform: `translate3d(0px, ${dY}px, 0px)`
-      }
-    },
-    moveTo (val) {
-      if (this.selType === 'year') {
-        this.itemKey = 0
-        this.d.map((v, k) => {
-          if (Number(v.match(/\d*/g)[0]) === val) {
-            this.itemKey = k
-          }
-        })
-      } else if (this.selType === 'month' || this.selType === 'day') {
-        // this.itemKey = +this.val - 1
-        this.itemKey = 0
-        this.d.map((v, k) => {
-          if (Number(v.match(/\d*/g)[0]) === val) {
-            this.itemKey = k
-          }
-        })
-      } else { // 日期外的 如果后面需要做成其他类型
-        this.itemKey = 0
-        this.d.map((v, k) => {
-          if (Number(v.match(/\d*/g)[0]) === val) {
-            this.itemKey = k
-          }
-        })
-      }
-      this.dY = mul((4 - this.itemKey), this.itemHeight)
-      this.scroll(this.dY, 0)
+const moveTo = (val) => {
+  itemKey.value = getMatchIndex(val);
+
+  // 如果找不到匹配的值，默认选择第一个
+  if (itemKey.value === 0 && props.d.length > 0 && Number(props.d[0].match(/\d+/)[0]) !== Number(val)) {
+    const foundIndex = props.d.findIndex(item => {
+      const match = item.match(/\d+/);
+      return match && Number(match[0]) === Number(val);
+    });
+    if (foundIndex !== -1) {
+      itemKey.value = foundIndex;
     }
   }
-}
+
+  dY.value = mul((4 - itemKey.value), itemHeight.value);
+  scroll(dY.value, 0);
+};
 </script>

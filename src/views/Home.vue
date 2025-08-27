@@ -1,68 +1,69 @@
 <template>
   <div class="date">
     <p @click="setPicker" class="click">设置默认日期（默认今天）</p>
-    <p>选中的时间：{{date}}</p>
+    <p>选中的时间：{{ date }}</p>
     <p @click="setTime" class="click">设置默认时间（默认当前）</p>
-    <p>选中的时间：{{date1}}</p>
-    <p @click="setDefault" class="click">设置指定的日期（2019-11-29）</p>
-    <p>选中的时间：{{date2}}</p>
-    <p @click="setMoment" class="click">设置所有参数（2019-04-01 18:30）</p>
-    <p>选中的时间：{{date3}}</p>
+    <p>选中的时间：{{ date1 }}</p>
+    <p @click="setDefault" class="click">设置指定的日期（{{ date2 }}）</p>
+    <p>选中的时间：{{ date2 }}</p>
+    <p @click="setMoment" class="click">设置所有参数（{{ date3 }}）</p>
+    <p>选中的时间：{{ date3 }}</p>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  data () {
-    return {
-      date: '',
-      date1: '',
-      date2: '2019-11-29',
-      date3: '2019-04-01 18:30' // yyyy-MM-dd HH-mm 务必按照格式
+<script setup>
+import { inject, ref } from 'vue';
+
+// 使用inject获取$picker实例
+const $picker = inject('$picker');
+
+// 响应式变量声明
+const date = ref('');
+const date1 = ref('');
+const date2 = ref('2019-11-29');
+const date3 = ref('2019-04-01 18:30');
+
+// 方法定义
+const setPicker = () => {
+  $picker.show({
+    succeed: (e) => {
+      date.value = e;
     }
-  },
-  methods: {
-    setPicker () {
-      this.$picker.show({
-        succeed: (e) => {
-          this.date = e
-        }
-      })
-    },
-    setTime () {
-      this.$picker.show({
-        type: 'moment', // 时分 moment
-        succeed: (e) => {
-          this.date1 = e
-        }
-      })
-    },
-    setDefault () {
-      this.$picker.show({
-        type: 'picker', // 默认picker，可不填
-        date: this.date2, // 初始化时间
-        succeed: (e) => {
-          this.date2 = e
-        }
-      })
-    },
-    setMoment () {
-      this.$picker.show({
-        type: 'moment', // 时分 moment
-        date: this.date3, // 初始化时间，精确到时分
-        startTime: '2018-01-01', // 开始时间
-        endTime: '2020-10-01', // 截至时间
-        succeed: (e) => {
-          this.date3 = e
-        },
-        cancel: () => {
-          console.log('cancel')
-        }
-      })
+  });
+};
+
+const setTime = () => {
+  $picker.show({
+    type: 'moment',
+    succeed: (e) => {
+      date1.value = e;
     }
-  }
-}
+  });
+};
+
+const setDefault = () => {
+  $picker.show({
+    date: date2.value,
+    succeed: (e) => {
+      date2.value = e;
+    }
+  });
+};
+
+const setMoment = () => {
+  $picker.show({
+    type: 'moment',
+    date: date3.value,
+    startTime: '2018-01-01',
+    endTime: '2020-10-01',
+    succeed: (e) => {
+      date3.value = e;
+    },
+    cancel: () => {
+      console.log('cancel');
+    }
+  });
+};
 </script>
 
 <style lang="scss">

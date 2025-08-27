@@ -1,95 +1,69 @@
-import objectAssign from 'object-assign'
-
-const mergeOptions = function ($vm, options) {
+const mergeOptions = ($vm, options) => {
   const defaults = {}
-  for (let i in $vm.$options.props) {
-    if (i !== 'value') {
-      defaults[i] = $vm.$options.props[i].default
+  for (const key in $vm.$options.props) {
+    if (key !== 'value') {
+      defaults[key] = $vm.$options.props[key].default
     }
   }
-  const _options = objectAssign({}, defaults, options)
-  for (let i in _options) {
-    $vm[i] = _options[i]
+  const _options = { ...defaults, ...options }
+  for (const key in _options) {
+    $vm[key] = _options[key]
   }
 }
 
-function add(a, b) {
-  var c, d, e
-  try {
-    c = a.toString().split('.')[1].length
-  } catch (f) {
-    c = 0
-  }
-  try {
-    d = b.toString().split('.')[1].length
-  } catch (f) {
-    d = 0
-  }
-  return e = Math.pow(10, Math.max(c, d)), (mul(a, e) + mul(b, e)) / e
+// 提取获取小数位数的公共函数
+const getDecimalLength = num => {
+  const numStr = num.toString()
+  const decimalPart = numStr.split('.')[1]
+  return decimalPart ? decimalPart.length : 0
 }
 
-function sub(a, b) {
-  var c, d, e
-  try {
-    c = a.toString().split('.')[1].length
-  } catch (f) {
-    c = 0
-  }
-  try {
-    d = b.toString().split('.')[1].length
-  } catch (f) {
-    d = 0
-  }
-  return e = Math.pow(10, Math.max(c, d)), (mul(a, e) - mul(b, e)) / e
+// 提取转换为整数的公共函数
+const toInteger = num => {
+  return Number(num.toString().replace('.', ''))
 }
 
-function mul(a, b) {
-  var c = 0
-  var d = a.toString()
-  var e = b.toString()
-  try {
-    c += d.split('.')[1].length
-  } catch (f) {}
-  try {
-    c += e.split('.')[1].length
-  } catch (f) {}
-  return Number(d.replace('.', '')) * Number(e.replace('.', '')) / Math.pow(10, c)
+const add = (a, b) => {
+  const c = getDecimalLength(a)
+  const d = getDecimalLength(b)
+  const e = Math.pow(10, Math.max(c, d))
+  return (mul(a, e) + mul(b, e)) / e
 }
 
-function div(a, b) {
-  var c, d
-  var e = 0
-  var f = 0
-  try {
-    e = a.toString().split('.')[1].length
-  } catch (g) {}
-  try {
-    f = b.toString().split('.')[1].length
-  } catch (g) {}
-  return c = Number(a.toString().replace('.', '')), d = Number(b.toString().replace('.', '')), mul(c / d, Math.pow(10, f - e))
+const sub = (a, b) => {
+  const c = getDecimalLength(a)
+  const d = getDecimalLength(b)
+  const e = Math.pow(10, Math.max(c, d))
+  return (mul(a, e) - mul(b, e)) / e
+}
+
+const mul = (a, b) => {
+  const c = getDecimalLength(a) + getDecimalLength(b)
+  return (toInteger(a) * toInteger(b)) / Math.pow(10, c)
+}
+
+const div = (a, b) => {
+  const e = getDecimalLength(a)
+  const f = getDecimalLength(b)
+  return mul(toInteger(a) / toInteger(b), Math.pow(10, f - e))
 }
 
 // 取余
-function rem(a, b) {
+const rem = (a, b) => {
   return sub(a, mul(parseInt(div(a, b)), b))
 }
 
-function getDate(date) {
+const getDate = date => {
   if (date === undefined) return false
-  const arr = date.toString().split('-')
-  arr[1] = arr[1].length === 1 && arr[1] < 10 ? '0' + arr[1] : arr[1]
-  arr[2] = arr[2].length === 1 && arr[2] < 10 ? '0' + arr[2] : arr[2]
-  // arr[3] = arr[3].length === 1 && arr[3] < 10 ? '0' + arr[3] : arr[3]
-  // arr[4] = arr[4].length === 1 && arr[4] < 10 ? '0' + arr[4] : arr[4]
-  return `${arr[0]}-${arr[1]}-${arr[2]}`
+  // 分离日期和时间部分
+  const [datePart, timePart] = date.toString().split(' ')
+  const arr = datePart.split('-')
+  const padZero = str => (str.length === 1 && Number(str) < 10 ? `0${str}` : str)
+  arr[1] = padZero(arr[1])
+  arr[2] = padZero(arr[2])
+  // 重组日期字符串，保留时间部分
+  const formattedDate = `${arr[0]}-${arr[1]}-${arr[2]}`
+  return timePart ? `${formattedDate} ${timePart}` : formattedDate
 }
 
-export {
-  mergeOptions,
-  add,
-  sub,
-  mul,
-  div,
-  rem,
-  getDate
-}
+export { add, div, getDate, mergeOptions, mul, rem, sub }
