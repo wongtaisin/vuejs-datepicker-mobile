@@ -1,6 +1,6 @@
 {
   "name": "vuejs-datepicker-mobile",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "A Vue.js datepick mobile project",
   "author": "wongtaisin <wongtaisin1024@gmail.com>",
   "main": "./lib/vuejs-datepicker-mobile.umd.min.js",
@@ -11,7 +11,7 @@
     "datepicker",
     "vuejs-datepicker-mobile"
   ],
-  "license": "MIT",
+  "license": "WTS",
   "private": false,
   "files": [
     "lib/*"
