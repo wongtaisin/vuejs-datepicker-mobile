@@ -17,20 +17,13 @@ npm i vuejs-datepicker-mobile --save-dev
 yarn add vuejs-datepicker-mobile
 ```
 
-> 初始化
-
-```js
-import Datepicker from 'vuejs-datepicker-mobile'
-Vue.use(Datepicker)
-```
-
-> 使用
+> 使用方式：直接导入
 
 ```js
 <script setup>
 import { ref } from 'vue'
 import Datepicker from 'vuejs-datepicker-mobile'
-Vue.use(Datepicker)
+import 'vuejs-datepicker-mobile/lib/style.css'
 
 const date = ref('')
 const date1 = ref('')
@@ -86,7 +79,7 @@ const setMoment = () => {
 > https://github.com/wongtaisin/vuejs-datepicker-mobile
 
 ```
-2.0.1 - 替换成vue3项目
+2.0.0 - 替换成vue3项目
 1.2.0 - 增加初次进入的动画效果
 1.1.2 - 增加背景关闭，优化代码
 1.0.4 - 增加时分参数

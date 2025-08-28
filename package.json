@@ -1,9 +1,10 @@
 {
   "name": "vuejs-datepicker-mobile",
-  "version": "2.0.3",
+  "version": "2.2.4",
   "description": "A Vue.js datepick mobile project",
   "author": "wongtaisin <wongtaisin1024@gmail.com>",
   "main": "./lib/vuejs-datepicker-mobile.umd.min.js",
+  "style": "./lib/style.css",
   "keywords": [
     "vue3",
     "mobile",
@@ -12,6 +13,9 @@
   ],
   "license": "MIT",
   "private": false,
+  "files": [
+    "lib/*"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -19,7 +23,6 @@
     "lib": "vite build --mode lib"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "vue": "^3.2.0",
     "vue-router": "^4.0.0"
   },

@@ -12,58 +12,56 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue';
-
-// 使用inject获取$picker实例
-const $picker = inject('$picker');
+import { ref } from 'vue'
+import Picker from '../index'
 
 // 响应式变量声明
-const date = ref('');
-const date1 = ref('');
-const date2 = ref('2019-11-29');
-const date3 = ref('2019-04-01 18:30');
+const date = ref('')
+const date1 = ref('')
+const date2 = ref('2019-11-29')
+const date3 = ref('2019-04-01 18:30')
 
 // 方法定义
 const setPicker = () => {
-  $picker.show({
-    succeed: (e) => {
-      date.value = e;
+  Picker.show({
+    succeed: e => {
+      date.value = e
     }
-  });
-};
+  })
+}
 
 const setTime = () => {
-  $picker.show({
+  Picker.show({
     type: 'moment',
-    succeed: (e) => {
-      date1.value = e;
+    succeed: e => {
+      date1.value = e
     }
-  });
-};
+  })
+}
 
 const setDefault = () => {
-  $picker.show({
+  Picker.show({
     date: date2.value,
-    succeed: (e) => {
-      date2.value = e;
+    succeed: e => {
+      date2.value = e
     }
-  });
-};
+  })
+}
 
 const setMoment = () => {
-  $picker.show({
+  Picker.show({
     type: 'moment',
     date: date3.value,
     startTime: '2018-01-01',
     endTime: '2020-10-01',
-    succeed: (e) => {
-      date3.value = e;
+    succeed: e => {
+      date3.value = e
     },
     cancel: () => {
-      console.log('cancel');
+      console.log('cancel')
     }
-  });
-};
+  })
+}
 </script>
 
 <style lang="scss">
